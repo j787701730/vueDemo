@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>slots插槽</title>
+</head>
+<body>
+<div id="app">
+  <panel>
+    <div slot="header">header1</div>
+    <div slot="content">content1</div>
+  </panel>
+  <panel>
+    <div slot="header">header2</div>
+    <div slot="content">content2</div>
+  </panel>
+  <panel>
+
+  </panel>
+</div>
+<template id="panel">
+  <div>
+    <div class="header">
+      <slot name="header">默认</slot>
+    </div>
+    <div class="content">
+      <slot name="content">默认</slot>
+    </div>
+  </div>
+</template>
+<script src="vue.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    components: {'panel': {template: '#panel',}}
+  })
+
+</script>
+</body>
+</html>

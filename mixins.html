@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>混合mixins</title>
+</head>
+<body>
+<div id="app">
+  <balance></balance>
+</div>
+<script src="vue.js"></script>
+<script>
+  var base = {
+    methods: {
+      show_balance: function (data) {
+        this.show = true;
+        this.count = data.count;
+        console.log(data);
+      },
+      ck: function () {
+        this.$emit('show-balance', {count: 1000})
+      }
+    },
+    data: function () {
+      return {
+        show: false, count: '',
+      }
+    }
+  }
+
+
+  Vue.component('balance', {
+    template:
+      `<div>
+          <show @show-balance="show_balance"></show>
+          <div v-if="show">{{count}}</div>
+       </div>`,
+    data: function () {
+      return {}
+    },
+    mixins: [base]
+  });
+  Vue.component('show', {
+    template: '<button @click="ck">显示余额</button>',
+    mixins: [base]
+  });
+
+
+  let app = new Vue({
+    el: "#app",
+    data: {
+      name: 'hello world'
+    }
+  })
+</script>
+</body>
+</html>

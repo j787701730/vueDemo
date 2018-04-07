@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>自定义指令</title>
+</head>
+<body>
+<div id="app">
+  <div v-pin:true.red.blue="pin1">自定义指令
+    <button @click="pin1=!pin1">点</button>
+  </div>
+  <div v-pin="pin2">自定义指令</div>
+</div>
+<script src="vue.js"></script>
+<script>
+  Vue.directive('pin', function (el, binding) {
+    var val = binding.value; // 值
+    var color = binding.modifiers; // 修饰符
+    var waring = binding.arg; // 获取true
+    console.log(color);
+    console.log(waring);
+    if (val) {
+      el.style.color = 'red';
+    }else {
+      el.style.color = 'blue';
+    }
+  })
+  let app = new Vue({
+    el: "#app",
+    data: {
+      pin1: true,
+      pin2: false
+    }
+  })
+</script>
+</body>
+</html>

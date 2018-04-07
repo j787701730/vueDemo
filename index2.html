@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>父子组件传值</title>
+</head>
+<body>
+<div id="app">
+  <alert name="hello"></alert>
+</div>
+<template id="alert">
+  <button :class="{btn:flag}" @click="ck">弹弹{{name}}</button>
+</template>
+<script src="vue.js"></script>
+<script>
+  let app = new Vue({
+    el: "#app",
+    data: {
+      name: 'hello world'
+    },
+    components: {
+      'alert':
+        {
+          // template: '<button :class="{btn:flag}" @click="ck">弹弹{{count}}</button>',
+          template:'#alert',
+          props:['name'],
+          methods: {
+            ck: function () {
+              if (this.flag) {
+                this.count++;
+              } else {
+                this.count--;
+              }
+
+              this.flag = !this.flag;
+              alert(this.name)
+            }
+          },
+          data: function () {
+            return {
+              count: 1,
+              flag: true
+            }
+          }
+        }
+    }
+  })
+</script>
+</body>
+</html>

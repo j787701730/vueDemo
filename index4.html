@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>平行组件传值</title>
+</head>
+<body>
+<div id="app">
+  <huahua></huahua>
+  <xiaoming></xiaoming>
+</div>
+<script src="vue.js"></script>
+<script>
+
+  var Event = new Vue();
+  Vue.component('huahua', {
+    template:
+      `<div>
+         我说: <input @keyup="change" type="text" v-model="i_said">
+       </div>`,
+    data: function () {
+      return {i_said: ''}
+    },
+    methods: {
+      change: function () {
+        Event.$emit('huahua-said', this.i_said)
+      }
+    }
+  });
+  Vue.component('xiaoming', {
+    template: '<div>' +
+    'huahua说: {{msg}}</div>',
+    data: function () {
+      return {msg: ''}
+    },
+    methods: {
+      ck: function () {
+        this.$emit('show-balance', {count: 1000})
+      }
+    },
+    mounted: function () {
+      var self = this;
+      Event.$on('huahua-said', function (data) {
+        self.msg = data;
+      })
+    }
+  });
+
+
+  let app = new Vue({
+    el: "#app",
+    data: {
+      name: 'hello world'
+    }
+  })
+</script>
+</body>
+</html>

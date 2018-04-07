@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>子父组件传值</title>
+</head>
+<body>
+<div id="app">
+  <balance></balance>
+</div>
+<script src="vue.js"></script>
+<script>
+  Vue.component('balance', {
+    template:
+      `<div>
+          <show @show-balance="show_balance"></show>
+          <div v-if="show">{{count}}</div>
+       </div>`,
+    data: function () {
+      return {show: false, count: ''}
+    },
+    methods: {
+      show_balance: function (data) {
+        this.show = true;
+        this.count = data.count;
+        console.log(data);
+      }
+    }
+  });
+  Vue.component('show', {
+    template: '<button @click="ck">显示余额</button>',
+    methods: {
+      ck: function () {
+        this.$emit('show-balance', {count: 1000})
+      }
+    }
+  });
+
+
+  let app = new Vue({
+    el: "#app",
+    data: {
+      name: 'hello world'
+    }
+  })
+</script>
+</body>
+</html>
