@@ -1,109 +1,126 @@
 <!doctype html>
 <html lang="zh-cn">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport"
-        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Vue</title>
   <style>
     .btn {
       background: aqua;
     }
+
+    [v-cloak] {
+      display: none;
+    }
   </style>
 </head>
+
 <body>
-<div id="app">
-  <span v-show="name">{{name}}</span>
-  <br>
-  <input v-model="name" type="text">
-  <input type="text" v-model.number="age">
-  <span>{{age}}</span>
-  <ul>
-    <li v-for="f in foot">{{f.name}}</li>
-  </ul>
-  <a :href="url" :class="{active:isa}">点击</a>
-  <button @click="ck($event)" v-on="{mouseenter:me,mouseleave:ml}">alert</button>
+  <div id="app" v-cloak>
+    <span v-show="name">{{name}}</span>
+    <br>
+    <input v-model="name" type="text">
+    <input type="text" v-model.number="age">
+    <span>{{age}}</span>
+    <ul>
+      <li v-for="(f,index) in foot">{{index}}.
+        <span v-for="(val,key) in f">{{key}}:{{val}}</span>
+      </li>
+    </ul>
+    <a :href="url" :class="{active:isa}">点击</a>
+    <button @click="ck($event)" v-on="{mouseenter:me,mouseleave:ml}">alert</button>
+    
+    <br>
+    <input type="radio" v-model="sex" value="1"> 男
+    <input type="radio" v-model="sex" value="2"> 女
+    <br>
+    <select v-model="op">
+      <option value="1">1</option>
+      <option value="2">2</option>
+    </select>
+    <!--<div v-if="a=='a'">a</div>-->
+
+    <!--计算-->
+
+    <table class="table table-bordered">
+      <thead>
+        <tr id="erp-thead-tr" style="background-color: #eee;">
+          <th class="order-by" data-order="order_no">学科
+            <i class="icon-sort"></i>
+          </th>
+          <th class="order-by" data-order="shop_name">分数
+            <i class="icon-sort"></i>
+          </th>
+        </tr>
+      </thead>
+      <tbody id="erp-tbody">
+        <tr>
+          <td>数学</td>
+          <td>
+            <input type="text" v-model.number="math">
+          </td>
+        </tr>
+        <tr>
+          <td>英语</td>
+          <td>
+            <input type="text" v-model="english">
+          </td>
+        </tr>
+        <tr>
+          <td>总分</td>
+          <td>{{sum}}</td>
+        </tr>
+        <tr>
+          <td>平均分</td>
+          <td>{{avg}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <alert></alert>
 
 
-  <br>
-  <input type="radio" v-model="sex" value="1"> 男
-  <input type="radio" v-model="sex" value="2"> 女
-  <br>
-  <select v-model="op">
-    <option value="1">1</option>
-    <option value="2">2</option>
-  </select>
-  <!--<div v-if="a=='a'">a</div>-->
-
-  <!--计算-->
-
-  <table class="table table-bordered">
-    <thead>
-    <tr id="erp-thead-tr" style="background-color: #eee;">
-      <th class="order-by" data-order="order_no">学科 <i class="icon-sort"></i></th>
-      <th class="order-by" data-order="shop_name">分数 <i class="icon-sort"></i></th>
-    </tr>
-    </thead>
-    <tbody id="erp-tbody">
-    <tr>
-      <td>数学</td>
-      <td><input type="text" v-model.number="math"></td>
-    </tr>
-    <tr>
-      <td>英语</td>
-      <td><input type="text" v-model="english"></td>
-    </tr>
-    <tr>
-      <td>总分</td>
-      <td>{{sum}}</td>
-    </tr>
-    <tr>
-      <td>平均分</td>
-      <td>{{avg}}</td>
-    </tr>
-    </tbody>
-  </table>
-  <alert></alert>
+  </div>
 
 
-</div>
+  <template id="alert">
+    <button :class="{btn:flag}" @click="ck">弹弹{{count}}</button>
+  </template>
+  <script src="vue.js"></script>
+  <script>
+    //<!--全局组件-->
+    // Vue.component('alert', {
+    //   template: '<button  @click="ck">弹弹</button>',
+    //   methods: {
+    //     ck: function () {
+    //       alert('弹弹')
+    //     }
+    //   }
+    // });
 
 
-<template id="alert">
-  <button :class="{btn:flag}" @click="ck">弹弹{{count}}</button>
-</template>
-<script src="vue.js"></script>
-<script>
-  <!--全局组件-->
-  // Vue.component('alert', {
-  //   template: '<button  @click="ck">弹弹</button>',
-  //   methods: {
-  //     ck: function () {
-  //       alert('弹弹')
-  //     }
-  //   }
-  // });
-
-
-  let app = new Vue({
-    el: "#app",
-    data: {
-      name: 'hello world',
-      foot: [{name: '小米'}, {name: '大米'}],
-      url: 'hhhh',
-      isa: false,
-      age: 10,
-      sex: 1,
-      op: 2,
-      math: 100,
-      english: 90
-    },
-    components: {
-      'alert':
-        {
+    let app = new Vue({
+      el: "#app",
+      data: {
+        name: 'hello world',
+        foot: [{
+          name: '小米'
+        }, {
+          name: '大米'
+        }],
+        url: 'hhhh',
+        isa: false,
+        age: 10,
+        sex: 1,
+        op: 2,
+        math: 100,
+        english: 90
+      },
+      components: {
+        'alert': {
           // template: '<button :class="{btn:flag}" @click="ck">弹弹{{count}}</button>',
-          template:'#alert',
+          template: '#alert',
           methods: {
             ck: function () {
               if (this.flag) {
@@ -123,33 +140,28 @@
 
           }
         }
-    },
-    methods: {
-      ck: function (e) {
-        alert(e)
+      },
+      methods: {
+        ck: function (e) {
+          alert(e)
+        },
+        me: function () {
+          console.log('me');
+        },
+        ml: function () {
+          console.log(1);
+        }
+      },
+      computed: {
+        sum: function () {
+          return parseFloat(this.math) + parseFloat(this.english);
+        },
+        avg: function () {
+          return (this.sum / 2).toFixed(2)
+        }
       }
-      ,
-      me: function () {
-        console.log('me');
-      }
-      ,
-      ml: function () {
-        console.log(1);
-      }
-    }
-    ,
-    computed: {
-      sum: function () {
-        return parseFloat(this.math) + parseFloat(this.english);
-      }
-      ,
-      avg: function () {
-        return (this.sum / 2).toFixed(2)
-      }
-    }
-  })
-
-
-</script>
+    })
+  </script>
 </body>
+
 </html>
