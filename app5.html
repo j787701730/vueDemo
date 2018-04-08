@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>元数据/路由匹配</title>
+</head>
+<div id=root>
+  <router-link to="/">首页</router-link>
+  <router-link to="/login">登录</router-link>
+  <router-link to="/user">用户管理</router-link>
+  <router-link to="/post">帖子管理</router-link>
+  <div>
+    <router-view></router-view>
+    <router-view name="sidebar"></router-view>
+    <router-view name="content"></router-view>
+  </div>
+</div>
+
+<body>
+  <script src="./vue.js"></script>
+  <script src="./vue-router.js"></script>
+  <script>
+    var routes = [{
+        path: '/',
+        component: {
+          template: `
+        <div><h1>首页</h1></div>`
+        }
+      },
+      {
+        path: '/login',
+        component: {
+          template: `
+        <div><h1>登录</h1></div>`
+        }
+      },
+      {
+        path: '/user', // 传递参数一种:name 一种?age=1&city=福州
+        // <h1>我今年{{$route.query.age}}岁</h1>
+        // <h1>我住在{{$route.query.city}}</h1>
+        // <router-link :to="'/user/'+ $route.params.name+ '/more'">更多信息</router-link>
+        name: 'user',
+        meta: { // 元数据
+          login_check: true
+        },
+        component: {
+          template: `
+      <div><h1>我叫:{{$route.params.name}}</h1>
+   
+      <router-link to="more" append>更多信息</router-link>
+      <router-view></router-view>
+      </div>`
+        },
+        // 子路由
+        children: [{
+          path: 'more', // 传递参数一种:name 一种?age=1&city=福州
+
+          component: {
+            template: `
+        <div><h1>我叫:{{$route.params.name}}</h1>
+        <h1>详细信息</h1>
+      
+        </div>`
+          }
+        }]
+
+      }, {
+        path: '/post',
+        meta: { // 元数据
+          login_check: true
+        },
+        components: {
+          sidebar: {
+            template: `
+              <ul>
+                <li>帖子列表</li>
+                <li>帖子管理</li>
+                </ul>`
+          },
+          content: {
+            template: `
+              <div>帖子内容
+              </div>`
+          }
+        },
+      }
+    ];
+
+    var router = new VueRouter({
+      routes: routes,
+    });
+    var login = false;
+    router.beforeEach(function (to, from, next) {
+      //  访问之前
+      // 第一种 路由匹配
+      // if (!login && to.matched.some(function (item) {
+      //     return item.path == '/user'
+      //   })) {
+      //   next('/login');
+      // } else {
+      //   next()
+      // }
+
+      // 第二种 元数据
+      if (!login && to.matched.some(function (item) {
+          return item.meta.login_check
+        })) {
+        next('/login');
+      } else {
+        next()
+      }
+    })
+    new Vue({
+      el: '#root',
+      router: router,
+      methods: {
+        ck: function () {
+          setTimeout(function () {
+            this.router.push('/about'); // 一种跳转
+            setTimeout(function () {
+              this.router.push({ // 另一种跳转
+                name: 'user',
+                params: {
+                  name: 'huahua'
+                }
+              })
+            }, 1000)
+          }, 1000)
+
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
